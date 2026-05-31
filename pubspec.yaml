@@ -1,0 +1,20 @@
+name: password_maker
+description: "A simple password generator app built with Flutter."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.11.0-78.0.dev
+
+dependencies:
+  flutter:
+    sdk: flutter
+  english_words: ^4.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

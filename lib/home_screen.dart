@@ -24,7 +24,16 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    passwordText = PasswordGenerator().generate(includeNumbers, includeSpecialChars, includeCustom);
+    _refreshPassword();
+  }
+
+  Future<void> _refreshPassword() async {
+    final pw = await PasswordGenerator().generate(includeNumbers, includeSpecialChars, includeCustom);
+    if (mounted) {
+      setState(() {
+        passwordText = pw;
+      });
+    }
   }
 
   @override
@@ -61,11 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
             // リフレッシュアイコン
             IconButton(
               icon: const Icon(Icons.refresh),
-              onPressed: () {
-                setState(() {
-                  passwordText = PasswordGenerator().generate(includeNumbers, includeSpecialChars, includeCustom);
-                });
-              },
+              onPressed: _refreshPassword,
             ),
           ],
         ),
@@ -94,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
         SwitchListTile(
-          title: const Text('***'),
+          title: const Text('カスタム文字列を含める'),
           value: includeCustom,
           onChanged: (value) {
             setState(() {

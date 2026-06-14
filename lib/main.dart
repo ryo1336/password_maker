@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'regenerate_widget.dart';
+import 'home_screen.dart';
 
 void main() {
   runApp(const MainApp());
@@ -17,7 +17,7 @@ class MainApp extends StatelessWidget {
           title: const Text('Password Maker'),
         ),
         body: Center(
-          child: RegenerateWidget(),
+          child: HomeScreen(),
         ),
       ),
     );

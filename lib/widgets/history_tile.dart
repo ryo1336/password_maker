@@ -32,4 +32,4 @@ class HistoryTile extends StatelessWidget {
       ],
     );
   }
-} 
+}

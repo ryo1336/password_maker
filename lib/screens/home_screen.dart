@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:password_maker/password_generator.dart';
-import 'histrory_tile.dart';
+import 'package:password_maker/services/password_generator.dart';
+import 'package:password_maker/widgets/history_tile.dart';
 
 class HomeScreen extends StatefulWidget {
 
@@ -14,6 +14,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final _generator = PasswordGenerator();
+
   String passwordText = '';
   String previousPassword = '';
   // 数字フラグ
@@ -37,27 +39,27 @@ class _HomeScreenState extends State<HomeScreen> {
     previousPassword = passwordText;
 
     // 新規のパスワードを生成
-    final pw = await PasswordGenerator().generate(includeNumbers, includeSpecialChars, includeCustom);
+    final pw = await _generator.generate(includeNumbers, includeSpecialChars, includeCustom);
 
     if (mounted) {
       setState(() {
         // 新しいパスワードを表示
         passwordText = pw;
         // 前に生成したパスワードがあれば履歴に追加
-        if(previousPassword.isNotEmpty) {
+        if (previousPassword.isNotEmpty) {
           historyList.insert(0, previousPassword);
         }
       });
     }
-  } 
+  }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildPasswordDisplay() {
     return Column(
       children: [
         const SizedBox(height: 20),
         // パスワード
-        Text(passwordText,
+        Text(
+          passwordText,
           style: const TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -75,7 +77,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 await Clipboard.setData(
                   ClipboardData(text: passwordText),
                 );
-
                 if (!context.mounted) return;
               },
             ),
@@ -87,7 +88,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        const Divider(height: 20),
+      ],
+    );
+  }
+
+  Widget _buildOptions() {
+    return Column(
+      children: [
         SwitchListTile(
           title: const Text('数字を含める'),
           value: includeNumbers,
@@ -122,18 +129,33 @@ class _HomeScreenState extends State<HomeScreen> {
             });
           },
         ),
+      ],
+    );
+  }
+
+  Widget _buildHistoryList() {
+    return Expanded(
+      child: ListView.builder(
+        itemCount: historyList.length,
+        itemBuilder: (context, index) {
+          return HistoryTile(
+            password: historyList[index],
+          );
+        },
+        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        _buildPasswordDisplay(),
         const Divider(height: 20),
-        Expanded(
-          child: ListView.builder(            
-            itemCount: historyList.length,
-            itemBuilder: (context, index) {
-              return HistoryTile(
-                password: historyList[index],
-              );
-            },
-            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8)
-          ),
-        ),
+        _buildOptions(),
+        const Divider(height: 20),
+        _buildHistoryList(),
       ],
     );
   }

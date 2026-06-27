@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:password_maker/password_generator.dart';
+import 'histrory_tile.dart';
 
 class HomeScreen extends StatefulWidget {
 
@@ -14,12 +15,16 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String passwordText = '';
+  String previousPassword = '';
   // 数字フラグ
   bool includeNumbers = false;
   // 特殊文字フラグ
   bool includeSpecialChars = false;
   // カスタムフラグ
   bool includeCustom = false;
+
+  // 履歴リスト
+  List<String> historyList = [];
 
   @override
   void initState() {
@@ -28,21 +33,29 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _refreshPassword() async {
+    // 以前のパスワードを保存
+    previousPassword = passwordText;
+
+    // 新規のパスワードを生成
     final pw = await PasswordGenerator().generate(includeNumbers, includeSpecialChars, includeCustom);
+
     if (mounted) {
       setState(() {
+        // 新しいパスワードを表示
         passwordText = pw;
+        // 前に生成したパスワードがあれば履歴に追加
+        if(previousPassword.isNotEmpty) {
+          historyList.insert(0, previousPassword);
+        }
       });
     }
-  }
+  } 
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      // mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Divider(),
-        const SizedBox(height: 20), // スペース
+        const SizedBox(height: 20),
         // パスワード
         Text(passwordText,
           style: const TextStyle(
@@ -74,8 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        const SizedBox(height: 20), // スペース
-        const Divider(),
+        const Divider(height: 20),
         SwitchListTile(
           title: const Text('数字を含める'),
           value: includeNumbers,
@@ -110,7 +122,18 @@ class _HomeScreenState extends State<HomeScreen> {
             });
           },
         ),
-        const Divider(),
+        const Divider(height: 20),
+        Expanded(
+          child: ListView.builder(            
+            itemCount: historyList.length,
+            itemBuilder: (context, index) {
+              return HistoryTile(
+                password: historyList[index],
+              );
+            },
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8)
+          ),
+        ),
       ],
     );
   }

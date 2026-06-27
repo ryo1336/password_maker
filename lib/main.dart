@@ -14,7 +14,7 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Password Maker'),
+          title: const Text('英単語パスワードメーカー'),
         ),
         body: Center(
           child: HomeScreen(),

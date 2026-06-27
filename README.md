@@ -21,6 +21,16 @@ flutter pub get
 flutter run
 ```
 
+## カスタム文字列の変更
+
+`assets/custom_config.json` の `custom` の値を編集してください。
+
+```json
+{
+  "custom": "#1"
+}
+```
+
 ## ビルド
 
 ```bash

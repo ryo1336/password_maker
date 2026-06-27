@@ -46,6 +46,3 @@ app.*.map.json
 
 # Claude related
 CLAUDE.md
-
-# json
-assets/custom_config.json

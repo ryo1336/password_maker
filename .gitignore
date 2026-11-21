@@ -46,3 +46,6 @@ app.*.map.json
 
 # Claude related
 CLAUDE.md
+
+# key.properties
+/android/key.properties

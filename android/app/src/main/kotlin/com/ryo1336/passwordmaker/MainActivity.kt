@@ -1,4 +1,4 @@
-package com.example.password_maker
+package com.ryo1336.passwordmaker
 
 import io.flutter.embedding.android.FlutterActivity
 

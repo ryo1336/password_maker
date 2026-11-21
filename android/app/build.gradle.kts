@@ -51,7 +51,12 @@ android {
 
     buildTypes {
         getByName("release") {
-            signingConfig = signingConfigs.getByName("release")
+            // key.properties がない環境(clone直後・CIなど)ではデバッグ鍵で署名し、ビルドを通す
+            signingConfig = if (keystorePropertiesFile.exists()) {
+                signingConfigs.getByName("release")
+            } else {
+                signingConfigs.getByName("debug")
+            }
             // 必要に応じてコード難読化・リソース最適化を有効化
             isMinifyEnabled = true
             isShrinkResources = true
